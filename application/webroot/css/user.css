@@ -1,0 +1,34 @@
+
+	.sign_or_join_form { width:286px; margin:0 auto; padding-top:50px; padding-bottom:50px; }
+	
+		.sign_or_join_form .input_wrap { }
+			.sign_or_join_form .input_wrap h3 { padding-top:23px; padding-bottom:23px; }
+
+			.sign_or_join_form .input_wrap input[type=text],
+			.sign_or_join_form .input_wrap input[type=password] { height:38px !important; line-height:38px !important; }
+
+		.sign_or_join_form .input_option_wrap { position:relative; border-top: 1px solid #f0f0f0; margin-top: 24px; padding-top: 24px; padding-bottom: 18px; }
+			.sign_or_join_form .input_option_wrap .or { position:absolute; text-align:center; width:50px; background:#fff; top:-10px; left: 50%; margin-left: -25px; font-size: 14px; color: #8e8e8e;  }
+
+		.sign_or_join_form h3 { font-size:18px; color:#4a4a4a; text-align:center; }
+
+		.sign_or_join_form.login_mode {}
+			.sign_or_join_form.login_mode .username { display:none; }
+		
+		.sign_or_join_form .alternative_wrap { text-align:center; }
+		.sign_or_join_form .social_wrap {  text-align:center; padding-top: 16px; }
+	
+	.edit_form { width:500px; margin:0 auto; }
+		.edit_form .page-header { margin-top:30px; border-bottom:0; text-align:center; }
+			.edit_form .page-header h3 { font-size: 30px; border-bottom: 2px solid #eee; display: inline-block; padding-bottom: 32px; }
+
+	.edit_form .form-actions { margin-top:40px; margin-bottom:40px; }
+	
+	.edit_form input[type=text],
+	.edit_form input[type=password] { height:30px; }
+
+	.edit_form textarea { font-size:13px; }
+
+	.password_modal input[type=text], 
+	.password_modal input[type=password], 
+	.password_modal textarea { line-height:30px; height:30px; }

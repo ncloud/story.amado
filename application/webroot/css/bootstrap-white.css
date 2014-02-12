@@ -1,0 +1,62 @@
+	
+	input[type=text], input[type=password], textarea {
+		border-bottom:0;
+		border-radius:3px;
+		border:1px solid #ccc;
+	}
+
+	input[type=text].input-gray, input[type=password].input-gray, textarea.input-gray {
+		background:#f4f4f4;
+	}
+	
+    input[type=text].not_required,
+    input[type=password].not_required,
+    textarea.not_required { background:#f4f4f4; border:1px dashed #ccc; }
+    
+    input::-webkit-input-placeholder { color: #aaa; }
+    input::-moz-placeholder { color: #aaa; }
+    input:-moz-placeholder {  color: #aaa; } /* Older versions of Firefox */ 
+    input:-ms-input-placeholder { color: #aaa; }
+
+    input:focus::-webkit-input-placeholder { color: #ccc; }
+
+    input:focus::-moz-placeholder { color: #ccc; }
+    input:focus:-moz-placeholder {  color: #ccc; } /* Older versions of Firefox */ 
+    input:focus:-ms-input-placeholder { color: #ccc; }
+	
+	.navbar-fixed-top { background:rgba(255,255,255,0.8); }
+	
+	.nav-pills li a.btn { color:#fff; }
+	.nav-pills li a.btn:hover { background:#bbb; }
+	.nav-pills li a.btn-primary:hover { background:#333; }
+
+	.form-actions { border-top:0; padding-top:0; }
+	.form-actions .pull-right {}
+	
+	.btn { border-radius:3px; box-shadow:0px 1px 0px rgba(0,0,0,0.1); }
+		.btn:hover { background:#999; color:#fff; }
+		
+	.btn-primary { background:#000; }
+		.btn-primary:hover { background:#333; }
+		.btn-primary:active,
+		.btn-primary:focus { background:#000; }
+	
+	.btn-gray { background:#e4e4e4; }
+
+	.btn-primary.disabled, .btn-primary[disabled], fieldset[disabled] .btn-primary, .btn-primary.disabled:hover, .btn-primary[disabled]:hover, fieldset[disabled] .btn-primary:hover, .btn-primary.disabled:focus, .btn-primary[disabled]:focus, fieldset[disabled] .btn-primary:focus, .btn-primary.disabled:active, .btn-primary[disabled]:active, fieldset[disabled] .btn-primary:active, .btn-primary.disabled.active, .btn-primary[disabled].active, fieldset[disabled] .btn-primary.active 
+	{
+		background-color:#ddd;
+		border-color:#ddd;
+	}
+
+	@media screen and (min-width: 768px) {
+		.container {
+			width:750px;
+		}
+		.jumbotron h1 {
+			font-size:34px;
+		}
+		.lead {
+			font-size: 16px;
+		}
+	}
