@@ -27,6 +27,19 @@ class M_story extends CI_Model
     	$this->db->where('id', $id);
     	$this->db->update('stories', $data);
     }
+    
+    function update_count($id, $field)
+    {
+        if(is_array($field)) {
+            foreach($field as $f)
+                $this->db->set($f, $f.'+1', FALSE);
+        } else {
+            $this->db->set($field, $field.'+1', FALSE);
+        }
+        
+        $this->db->where('id', $id);
+        $this->db->update('stories');
+    }
 
     function get($id, $join_user = true) {
         if($join_user)

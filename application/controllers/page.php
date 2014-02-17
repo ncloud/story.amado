@@ -266,6 +266,7 @@ class Page extends APP_Controller {
     {
         $this->load->model('m_story');
         $this->load->model('m_story_preview');
+        $this->load->model('m_log');
         $this->load->library('date');
 
         $this->layout->addStyle('view');
@@ -305,6 +306,23 @@ class Page extends APP_Controller {
                 }
 
             	$story->content_html = \Michelf\MarkdownExtra::defaultTransform($story->content); 
+                
+                // story log
+                $session_data = $this->session->all_userdata();
+                $story_logs = $this->m_log->get_story_logs($id, $this->uid);
+                $this->set('story_logs', $story_logs);
+                
+                $referrer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
+                
+                if(!isset($story_logs['view'])) {
+                    $this->m_log->add($id, 'view.unique', $this->uid, $session_data['user_agent'], $this->input->ip_address(), $referrer);                
+                    $this->m_story->update_count($id, 'unique_count');
+                }
+                
+                $this->m_log->add($id, 'view', $this->uid, $session_data['user_agent'], $this->input->ip_address(), $referrer);
+                $this->m_story->update_count($id, 'pageview_count');
+                // story log end
+                
 
             	if(!empty($story->cover)) {
                     $black_base_navbar = true;
