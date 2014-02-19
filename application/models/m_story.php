@@ -27,6 +27,19 @@ class M_story extends CI_Model
     	$this->db->where('id', $id);
     	$this->db->update('stories', $data);
     }
+    
+    function update_count($id, $field)
+    {
+        if(is_array($field)) {
+            foreach($field as $f)
+                $this->db->set($f, $f.'+1', FALSE);
+        } else {
+            $this->db->set($field, $field.'+1', FALSE);
+        }
+        
+        $this->db->where('id', $id);
+        $this->db->update('stories');
+    }
 
     function get($id, $join_user = true) {
         if($join_user)
@@ -64,7 +77,7 @@ class M_story extends CI_Model
             $this->db->where('stories.is_publish', 'yes');
         }
 		
-		return $this->db->select('stories.*, GROUP_CONCAT(story_tags.name) as tags, users.profile as user_profile, users.name as user_name, users.permalink as user_permalink, users.host as user_host')->group_by('stories.id')->order_by('stories.create_time DESC')->get()->result();
+		return $this->db->select('stories.*, GROUP_CONCAT(story_tags.name) as tags, users.profile as user_profile, users.name as user_name, users.permalink as user_permalink, users.host as user_host')->group_by('stories.id')->order_by('stories.publish_time DESC, stories.create_time DESC')->get()->result();
 	}
 
     function get_count_by_user_id($user_id, $view_user_id = false) {
@@ -96,7 +109,7 @@ class M_story extends CI_Model
             $this->db->where('stories.is_publish', 'yes');
         }
 		
-		return $this->db->select('stories.*, GROUP_CONCAT(story_tags.name) as tags, users.profile as user_profile, users.name as user_name, users.permalink as user_permalink, users.host as user_host')->group_by('stories.id')->order_by('stories.create_time DESC')->get()->result();
+		return $this->db->select('stories.*, GROUP_CONCAT(story_tags.name) as tags, users.profile as user_profile, users.name as user_name, users.permalink as user_permalink, users.host as user_host')->group_by('stories.id')->order_by('stories.publish_time DESC, stories.create_time DESC')->get()->result();
 	}
 
     function gets_all_by_tag($tag, $count, $index = 1, $user_id = false) {
@@ -184,20 +197,21 @@ class M_story extends CI_Model
                 array_shift($versions);
                 foreach($versions as $version) {
                     $file_name = urldecode(str_replace($server_url.'files/uploads/', '', $story->cover_url));
-                    $story->{'cover_' . $version . '_url'} = 'http://s3.withstories.com/uploads/'.$version.'_'.str_replace('%','%25',rawurlencode($file_name));
+                    $story->{'cover_' . $version . '_url'} = 'http://s3.withstories.com/uploads/'.$version.'_'.str_replace('%','%2525',rawurlencode($file_name));
                 }
             }
             
             $file_name = urldecode(str_replace($server_url.'files/uploads/', '', $story->cover_url));
-            $story->{'cover_url'} = 'http://s3.withstories.com/uploads/'.str_replace('%', '%25',rawurlencode($file_name));
+            $story->{'cover_url'} = 'http://s3.withstories.com/uploads/'.str_replace('%', '%2525',rawurlencode($file_name));
         }
+        
 		
 		// story view (화면보기용 S3 변환)
 		//$server_url = site_url('/');
 
 		$story->content = str_replace($server_url.'files/uploads/','http://s3.withstories.com/uploads/view_',$story->content);
         
-        if($count = preg_match_all('/!\[(.*)\]\((.*?)\)/', $story->content, $matches)) {
+        if($count = preg_match_all('/!\[(.*)\]\(http:\/\/s3\.withstories\.com(.*?)\)/', $story->content, $matches)) {
             for($i=0;$i<$count;$i++) {
                 $story->content = str_replace($matches[2][$i], str_replace('%','%25',$matches[2][$i]), $story->content);
             }

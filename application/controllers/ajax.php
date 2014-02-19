@@ -83,6 +83,10 @@ class Ajax extends APP_Controller {
 	function upload()
 	{		
 		$this->load->library('upload_handler');
+        
+        $this->upload_handler->set_option_value('script_url', trim_slashes($this->config->item('server_url')).'/');
+        $this->upload_handler->set_option_value('upload_url', trim_slashes($this->config->item('server_url')).'/files/uploads/');
+        
 		$files = $this->upload_handler->execute();
 		
 		if($files && $this->config->item('enable_s3')) $this->__upload_s3($files[$this->upload_handler->get_option_value('param_name')]);
@@ -270,7 +274,7 @@ class Ajax extends APP_Controller {
                 
         // AWS upload
         $individual_filenames = array();
-		$server_url = site_url('/');
+		$server_url = $this->config->item('server_url');
 		
         foreach($files as $file) {
 			foreach($this->upload_handler->get_image_versions() as $version) {

@@ -52,10 +52,10 @@
 	</div>
 
 	<?php
-		$server_url = site_url('/');
-		if(!empty($story->user_host)) $server_url = 'http://' . $story->user_host;
+		$base_url = $server_url = trim_slashes(site_url('/'));
+		if(!empty($story->user_host)) $server_url = trim_slashes('http://' . $story->user_host);
         
-        $like_url = $story->is_share_by_permalink == 'yes' ? $server_url . '/' . $story->permalink . '/' . $story->id :  $server_url . '/' . $story->id;
+        $like_url = empty($story->user_host) ? $base_url . '/' . $story->id :  $server_url . '/' . (!empty($story->permalink) ? $story->permalink . '/' : '') . $story->id;
 	?>
 	
 	<div class="facebook_wrap">
@@ -101,7 +101,7 @@
 	}
 
 	function onResize() {
-		var size = Math.round(($(window).width() - $content.outerWidth()) / 2);
+		var size = Math.floor(($(window).width() - $content.outerWidth()) / 2);
 		var window_height = $window.height();
 
 		$scroll_block.css('marginLeft', '-'+size+'px');
@@ -118,6 +118,8 @@
 	}
 
 	$window.ready(function() {		
+        onResize();
+        
 		// image class wrap;
 		$('.story-content-wrap img').each(function(index, image) {
 			var $image = $(image);
@@ -161,8 +163,6 @@
 
 			$image.parents('p').addClass(p_classNames.join(' ')).parent('blockquote').addClass('image_block ' + classNames.join(' '));
 		});
-
-		onResize();
 	});
 
 	$window.resize(function() {

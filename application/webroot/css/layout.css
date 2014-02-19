@@ -75,9 +75,9 @@
 
 		ul.stories li.story h3 .date { font-weight:normal; color:#999; font-size:13px; }
 
-		ul.stories li.story span.author { position:absolute; top:26px; right:20px; width:32px; height:32px; overflow:hidden; box-shadow:0px 1px 0px rgba(0,0,0,0.1); border-radius:5px; }
+		ul.stories li.story span.author { position:absolute; top:50%; right:20px; width:32px; height:32px; margin-top:-16px; overflow:hidden; box-shadow:0px 1px 0px rgba(0,0,0,0.1); border-radius:5px; }
 		ul.stories li.story span.author img { width:32px; }
-		ul.stories li.story span.author a { display:inline-block; }
+		ul.stories li.story span.author a { width:32px; height:32px; display:inline-block; }
 
 		ul.stories li.story .cover_background { width:100%; height:100%; background:#000; background-repeat:no-repeat; background-size:cover; }
 			ul.stories li.story .cover_background .info { background:rgba(0,0,0,0.5); }

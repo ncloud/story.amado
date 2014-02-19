@@ -8,10 +8,8 @@
 	<?php echo !empty($story->cover) ? '</div>' : '';?>
 	
 		<span class="author">
-			<a href="<?php echo $story->user_url;?>">
-				<?php if(!empty($story->user_profile)) { ?>
-					<img src="<?php echo $story->user_profile;?>" alt="profile" />
-				<?php } else { ?>
+			<a href="<?php echo $story->user_url;?>"<?php if(!empty($story->user_profile)) { ?> style="background:url(<?php echo $story->user_profile;?>) no-repeat; background-size:cover;"<?php } ?>>
+				<?php if(empty($story->user_profile)) { ?>
 					<span class="char_profile"><?php echo mb_substr($story->user_name, 0,1);?></span>
 				<?php } ?>
 			</a>

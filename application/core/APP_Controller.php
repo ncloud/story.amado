@@ -6,6 +6,8 @@ class APP_Controller extends CI_Controller {
 	protected $debug;
     protected $language;
 	protected $queries;
+    
+    protected $uid;
 
 	protected $custom_host;
 	
@@ -35,6 +37,11 @@ class APP_Controller extends CI_Controller {
             }   
         }
         */
+        
+        if(!$this->uid = $this->session->userdata('uid')) {
+            $this->uid = md5(mktime() . rand() . mktime() . $this->session->userdata('session_id'));
+            $this->session->set_userdata('uid', $this->uid);
+        }
 
         $this->custom_host = false;
 

@@ -1,7 +1,9 @@
 	
 	html, body { height:100%; font-family:"나눔고딕", "NanumGothic", "NanumGothicOTF", "맑은고딕", "Malgun Gothic", dotum; }
 	h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 { font-family:"나눔고딕", "NanumGothic", "NanumGothicOTF", "맑은고딕", "Malgun Gothic", dotum; }
-
+    pre,
+    code { font-family:"나눔고딕", "NanumGothic", "NanumGothicOTF", "맑은고딕", "Malgun Gothic", dotum;  }
+    
 	.tooltip { z-index:10000;}
 
 	input::-webkit-input-placeholder { color: #c7c7c7; }
@@ -32,6 +34,7 @@
 	h4 { font-size:15px; }
 
 	hr { border-top:0; border-bottom:2px solid #ddd; }
+	
 	
 	textarea { resize:none; }
 
