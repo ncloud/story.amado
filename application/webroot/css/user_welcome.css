@@ -10,3 +10,5 @@
 
 			.user_stories_wrap .user_wrap h3 { color:#fff; font-size:30px; }
 		.user_stories_wrap .user_wrap p { color:#ddd; font-size:16px; margin-top:10px; }
+		.user_stories_wrap .user_wrap p a { color:#fff; }
+		.user_stories_wrap .user_wrap p a:hover { text-decoration:underline; }

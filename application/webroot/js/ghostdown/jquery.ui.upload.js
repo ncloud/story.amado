@@ -97,6 +97,8 @@
                         }
                     },
                     fail: function (e, data) {
+                        console.log(data);
+                    
                     	/*jslint unparam:true*/
                         $dropzone.trigger("uploadfailure", [data.result]);
                         $dropzone.find('.js-upload-progress-bar').addClass('fail');
