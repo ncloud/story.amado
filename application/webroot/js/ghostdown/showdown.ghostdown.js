@@ -1,7 +1,49 @@
 
 (function () {
+    var caches = [];
+
     var ghostdown = function () {
         return [
+            // --- xxx --- block
+            {
+                type: 'lang',
+                filter: function (text) {
+                    var blockMarkdownRegex = /^\-\-\-(.*?)\-\-\-?$/gim;
+
+                    return text.replace(blockMarkdownRegex, function (match, key) {
+                        if(match == '------') return match;
+
+                        if(match.indexOf('-end') < 0) return '<section class="block_begin">' + key+ '</section>';
+                        else return '<section class="block_end"></section>';
+                    });
+                }
+            },
+            {
+                type: 'html',
+                filter: function (text) {
+                    var blockMarkdownRegex = /\<section class=\"block_begin\"\>(.*?)\<\/section\>?$/gim;
+
+                    text = text.replace(blockMarkdownRegex, function (match, id) {
+                        var keys = $.trim(id).split(':');
+                        
+                        if(keys.length == 1) { 
+                            keys[1] = '';
+                            keys[2] = '';
+                        }
+
+                        if(keys.length == 2) keys[2] = '';
+
+                        return '<section class="block block-' + keys[0] + '"' + (keys[1] != '' ? ' style="background-color:' + keys[1] + ';' : '') + '">' + (keys[2] != '' ? '<h3 class="block-title">' + keys[2] + '</h3>' : '');
+                    });
+
+                    text = text.replace(/\<section class=\"block_end\"\>\<\/section\>?$/gim, function (match) {
+                        return '</section>';
+                    });
+
+                    return text;
+                }
+            },
+
             // : keyword syntax
             {
                 type: 'lang',
@@ -23,7 +65,43 @@
                         for(var i = 0 ; i < keys.length ; i++) keys[i] = $.trim(keys[i]);
 
                         if(keys.length == 2) {
-                            return keys[0];
+                            switch(keys[0]) {
+                                case 'youtube':                            
+                                    var youtube_video_id = youtubeParser(keys[1]);
+
+                                    return '<section class="youtube-widget" style="background-image:url(' + (youtube_video_id == '' ? '' : ('http://img.youtube.com/vi/' + youtube_video_id + '/0.jpg')) + ');">' +
+                                           '<span class="media"></span>' +
+                                           '<span class="vendor">Youtube</span>' +
+                                           '</section>';
+                                break;
+                                case 'vimeo':                                
+                                    var vimeo_video_id = vimeoParser(keys[1]);
+                                    var default_style = '';
+                                    if(typeof(caches['vimeo_thumbnail_' + vimeo_video_id]) != 'undefined') {
+                                        default_style = 'background-image:url(' + caches['vimeo_thumbnail_' + vimeo_video_id] + ');';
+                                    } else {
+                                        $.ajax({
+                                            type:'GET',
+                                            url: 'http://vimeo.com/api/v2/video/' + vimeo_video_id + '.json',
+                                            jsonp: 'callback',
+                                            dataType: 'jsonp',
+                                            success: function(data){
+                                                var thumbnail_src = data[0].thumbnail_large;
+                                                $(".vimeo_widget_" + vimeo_video_id).css('background-image', 'url(' + thumbnail_src + ')');
+                                                caches['vimeo_thumbnail_' + vimeo_video_id] = thumbnail_src;
+                                            }
+                                        });
+                                    }
+
+                                    return '<section class="vimeo_widget_' + vimeo_video_id + ' vimeo-widget" style="' + default_style + '">' +
+                                           '<span class="media"></span>' +
+                                           '<span class="vendor">Vimeo</span>' +
+                                           '</section>';
+                                break;
+                                default: 
+                                    return ''; 
+                                break;
+                            }
                         } else {
                             return 'error';
                         }

@@ -191,20 +191,24 @@ class M_story extends CI_Model
         
         if(!empty($story->cover)) {
             $story->cover_url =  $story->cover;
+            
+            $versions = $this->upload_handler->get_image_versions();
+            array_shift($versions);
 
             if(substr($story->cover_url,0, strlen($server_url)) == $server_url) {
-                $versions = $this->upload_handler->get_image_versions();
-                array_shift($versions);
                 foreach($versions as $version) {
                     $file_name = urldecode(str_replace($server_url.'files/uploads/', '', $story->cover_url));
-                    $story->{'cover_' . $version . '_url'} = 'http://s3.withstories.com/uploads/'.$version.'_'.str_replace('%','%2525',rawurlencode($file_name));
+                    $story->{'cover_' . $version . '_url'} = 'http://s3.withstories.com/uploads/'.$version.'_'.str_replace('%','%25',rawurlencode($file_name));
+                }
+            
+                $file_name = urldecode(str_replace($server_url.'files/uploads/', '', $story->cover_url));
+                $story->{'cover_url'} = 'http://s3.withstories.com/uploads/'.str_replace('%', '%25',rawurlencode($file_name));
+            } else {
+                foreach($versions as $version) {
+                    $story->{'cover_' . $version . '_url'} = $story->cover_url;
                 }
             }
-            
-            $file_name = urldecode(str_replace($server_url.'files/uploads/', '', $story->cover_url));
-            $story->{'cover_url'} = 'http://s3.withstories.com/uploads/'.str_replace('%', '%2525',rawurlencode($file_name));
         }
-        
 		
 		// story view (화면보기용 S3 변환)
 		//$server_url = site_url('/');

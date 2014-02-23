@@ -1,0 +1,43 @@
+
+	section.youtube-widget,
+	section.vimeo-widget { 
+		margin: 1.6em 0;
+		position: relative;
+		overflow: hidden;
+		width: 100%;
+		height:200px;
+		text-align: center;
+		color: #aaa9a2;
+		background: #f4f4f4; 
+		background-size:cover;
+		background-position:center;
+		-webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; 
+	}
+
+	section.youtube-widget .vendor,
+	section.vimeo-widget .vendor { position:absolute; background:rgba(0,0,0,0.6); border-radius:4px; font-size:12px; color:#fff; padding:10px; left:10px; top:10px; }
+
+	section.youtube-widget .media:before,
+	section.vimeo-widget .media:before {
+		display:block;
+	    font-family: "Icons";
+	    font-weight: normal;
+	    font-style: normal;
+	    vertical-align: -7%;
+	    text-transform: none;
+	    speak: none;
+	    line-height: 1;
+	    content: "\e022";
+	    font-size: 40px;
+	    color: #fff;
+	    display: inline-block;
+	    line-height:200px;
+	    background:rgba(0,0,0,0.5);
+	    width:100%;
+	    -webkit-font-smoothing: antialiased;
+	    -webkit-transition: transform 1s ease;
+	    -moz-transition: transform 1s ease;
+	    transition: transform 1s ease; 
+	}
+	section.youtube-widget .media:hover,
+	section.vimeo-widget .media:hover { text-decoration: none; }

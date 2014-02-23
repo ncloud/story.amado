@@ -269,6 +269,9 @@ class Page extends APP_Controller {
         $this->load->model('m_log');
         $this->load->library('date');
 
+        $this->set('in_container', false);
+
+        $this->layout->addStyle('view_content');
         $this->layout->addStyle('view');
 /*
         $this->layout->addStyle('plugin/jquery.fancybox');
@@ -285,8 +288,6 @@ class Page extends APP_Controller {
         } else {
             $story = $this->m_story->get($id);
         }
-
-        $black_base_navbar = false;
 
         if($story) {        	
             if($story->is_publish == 'no' && ($story->user_id != $this->user_data->id && $this->user_data->id != 1)) {
@@ -323,10 +324,6 @@ class Page extends APP_Controller {
                 $this->m_story->update_count($id, 'pageview_count');
                 // story log end
                 
-            	if(!empty($story->cover)) {
-                    $black_base_navbar = true;
-            	}
-
             	$can_edit = $this->user_data->id == $story->user_id ? true : false;
             	if($can_edit) {
             		$this->set('edit_url', site_url('/edit/'.$story->id));
@@ -349,11 +346,11 @@ class Page extends APP_Controller {
     
                 $stories_by_user = $this->m_story->convert_for_view($stories_by_user);
 
+                $header_theme = 'default';
+                $story->header_html = $this->__convert_for_header($header_theme, $story);
+
             	$this->set('story', $story);
                 $this->set('stories_by_user', $stories_by_user);
-
-        		$this->set('in_container', true);
-                $this->set('black_base_navbar', $black_base_navbar);
 
                 $this->set('og_title', $story->title);
                 $this->layout->setTitle($story->title);
@@ -377,6 +374,130 @@ class Page extends APP_Controller {
         } else {
         	$this->error('잘못된 접근입니다.');
         }
+    }
+
+    private function __convert_for_header($header_theme, $story) {
+        require_once APPPATH . '/vendors/Handlebars/Autoloader.php';
+        Handlebars\Autoloader::register();
+
+        $engine = new Handlebars\Handlebars;
+
+        $content = @file_get_contents(APPPATH . '/../themes/theme.header/'.$header_theme.'/view.html');
+        if($content) {
+            $story_for_header = new StdClass;
+
+            // Info
+            $story_for_header->title = $story->title;
+            if(!empty($story->sub_title)) {
+                $story_for_header->have_sub_title = true;
+                $story_for_header->sub_title = nl2br(trim($story->sub_title));
+            } else {
+                $story_for_header->have_sub_title = false;
+                $story_for_header->sub_title = '';
+            }
+
+            // User
+            $story_for_header->user = new StdClass;
+            $story_for_header->user->id = $story->user_id;
+            $story_for_header->user->name = $story->user_name;
+            $story_for_header->user->url = $story->user_url;
+            $story_for_header->user->proper_name = strtoupper(mb_substr($story->user_name, 0, 1));
+            $story_for_header->user->have_profile = !empty($story->user_profile) ? true : false;
+            $story_for_header->user->profile_url = $story->user_profile;
+
+            // Date
+            $story_for_header->is_publish = $story->publish_time != '0000-00-00 00:00:00' ? true : false;
+            $story_for_header->publish_time = $story->publish_time;
+            $story_for_header->publish_time_from_now = $this->date->string_from_now($story->publish_time);
+            $story_for_header->create_time = $story->create_time;
+            $story_for_header->create_time_from_now = $this->date->string_from_now($story->create_time);
+
+            // Covers
+                           
+            $story_for_header->have_cover = !empty($story->cover) ? true : false;
+            if($story_for_header->have_cover) {
+                $story_for_header->cover_url = $story->cover_url;
+
+                $versions = $this->upload_handler->get_image_versions();
+                array_shift($versions);
+
+                foreach($versions as $version) {
+                    $story_for_header->{'cover_' . $version . '_url'} = $story->{'cover_' . $version . '_url'};
+                }   
+            }
+            
+            // Tags
+
+            $story_for_header->have_tags = !empty($story->tags) ? true : false;
+            if(!empty($story->tags)) {
+                $tags = explode(',', $story->tags);
+                foreach($tags as $key => $tag) {
+                    $tag = trim($tag);
+
+                    if(!empty($tag)) $tags[] = $tag;
+                }
+
+                $story->tags = $tags; 
+
+                $tags_text = array();
+                foreach($tags as $tag) { 
+                    $tag = trim($tag); 
+                    if(empty($tag)) continue;
+
+                    $tags_text[] = '<a href="' . site_url('/tag/' . urlencode($tag) . '/' . $story->user_id) . '">' . $tag . '</a>';
+                }
+                
+                $story_for_header->tags_html = implode(', ', $tags_text);
+            } else {
+                $story_for_header->tags = array();
+                $story_for_header->tags_html = '';
+            }
+
+            $config = @file_get_contents(APPPATH . '/../themes/theme.header/'.$header_theme.'/config.json');
+            if($config) {
+                $config = $engine->render($config, array('story'=>$story_for_header, 'global'=>array('is_mobile_mode'=>$this->get('mobile_mode'))));
+                $config = json_clean_decode($config);
+            } else {
+                $config = new StdClass;
+            }
+
+            if(!isset($config->black_base_navbar)) {
+                if(!empty($story->cover)) {
+                    $config->black_base_navbar = true;
+                } else{
+                    $config->black_base_navbar = false;
+                }
+            }
+
+            if(!isset($config->nav_in_container)) {
+                if(!empty($story->cover)) {
+                    $config->nav_in_container = true;
+                } else{
+                    $config->nav_in_container = false;
+                }
+            }
+
+            $this->set('nav_in_container', $config->nav_in_container);
+            $this->set('black_base_navbar', $config->black_base_navbar);
+            
+
+            $content = $engine->render($content, array('story'=>$story_for_header, 'config'=>$config, 'global'=>array('is_mobile_mode'=>$this->get('mobile_mode'))));
+
+            // theme style & script
+
+            if(file_exists(APPPATH . '/../themes/theme.header/'.$header_theme.'/script.js')) {
+                $script = file_get_contents(APPPATH . '/../themes/theme.header/'.$header_theme.'/script.js');
+                $script = $engine->render($script, array('story'=>$story_for_header, 'global'=>array('is_mobile_mode'=>$this->get('mobile_mode'))));
+                $this->layout->addScript($script, true);
+            }
+
+            if(file_exists(APPPATH . '/../themes/theme.header/'.$header_theme.'/style.css')) {
+                $style = file_get_contents(APPPATH . '/../themes/theme.header/'.$header_theme.'/style.css');
+                $this->layout->addStyle($style, true);
+            }
+        }
+
+        return $content;
     }
 }
 ?>

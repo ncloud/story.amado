@@ -1,7 +1,10 @@
     <style type="text/css">
         @import url("<?php echo site_url('/css/image_uploader.css');?>");
+        @import url("<?php echo site_url('/css/ghostdown_widget.css');?>");
         @import url("<?php echo site_url('/css/ghostdown.css');?>");
         @import url("<?php echo site_url('/css/write.css');?>");
+
+        @import url("<?php echo site_url('/css/view_content.css');?>");
     </style>
 
     <?php if(isset($message) && !empty($message)) { ?>
@@ -65,7 +68,7 @@
                       <header class="floatingheader">
                         미리보기
                       </header>
-                      <div class="entry-preview-content">
+                      <div class="entry-preview-content view_content">
                         <div class="rendered-markdown"></div>
                       </div>
                     </div>

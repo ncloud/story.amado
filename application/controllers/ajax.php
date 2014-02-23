@@ -82,6 +82,8 @@ class Ajax extends APP_Controller {
 
 	function upload()
 	{		
+		ini_set('memory_limit', '256M');
+
 		$this->load->library('upload_handler');
         
         $this->upload_handler->set_option_value('script_url', trim_slashes($this->config->item('server_url')).'/');
@@ -287,7 +289,7 @@ class Ajax extends APP_Controller {
 				if(!empty($version)) $file_value = str_replace('/'.$version.'/', '/'.$version.'_',$file_value);
 				$file_value = str_replace('files/uploads/', '', $file_value);
 
-				$individual_filenames[] = array('from'=>urldecode($file_name), 'to'=>'uploads/'.rawurlencode($file_value));
+				$individual_filenames[] = array('from'=>urldecode($file_name), 'to'=>'uploads/'.$file_value);
 			}
 		}
 		

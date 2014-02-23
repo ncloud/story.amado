@@ -1,0 +1,40 @@
+	{{#if story.have_cover}}
+		<div class="story-header-background" style="background-image:url({{#if global.is_mobile_mode}}{{story.cover_view_url}}{{else}}{{story.cover_url}}{{/if}});"></div><div class="story-header-shadow"></div>
+	{{/if}}
+
+	<div class="story-header-wrap">
+	{{#if story.have_tags}}
+		<div class="story-tags">
+			{{{story.tags_html}}}
+		</div>
+	{{/if}}
+
+	  	<h1><span>{{story.title}}</span></h1>
+      	{{#if story.have_sub_title}}
+      	<h2>{{story.sub_title}}</h2>
+      	{{/if}}
+
+      	<p class="extra">
+			<a class="author" href="{{story.user_url}}">
+				{{#if story.have_user_profile}}
+					<img src="{{story.user.profile}}" alt="profile" />
+				{{else}}
+					<span class="char_profile">{{story.user.proper_name}}</span>
+				{{/if}}
+				
+				<span>{{story.user.name}}</span>
+			</a>
+      		<span class="sep">·</span> 
+      		<span class="date">
+      			{{#if story.is_publish}}
+      				{{story.publish_time_from_now}}
+      			{{else}}
+      				{{story.create_time_from_now}}
+      			{{/if}}
+      		</span>
+      	</p>
+    </div>
+
+	{{#if story.have_cover}}
+  		<a class="story-view-more" href="#" onclick="gotoContent(); return false;">내용 읽기</a>
+	{{/if}}

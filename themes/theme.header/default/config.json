@@ -1,0 +1,6 @@
+{
+	// 상단 네비게이션 영역을 전체로 사용할지 본문 영역만큼 사용할지 설정
+    "nav_in_container": false, 
+    // 네비게이션의 버튼이나 로고등의 색을 검은색 기준으로 표현할지 설정
+    "black_base_navbar": {{#if story.have_cover}}true{{else}}false{{/if}}
+}

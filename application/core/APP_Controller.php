@@ -101,7 +101,9 @@ class APP_Controller extends CI_Controller {
 			$this->set('current_user', $this->user_data);
         } else {
         }
-		        
+		
+		//$this->output->enable_profiler(TRUE);        
+		
 		if($this->input->is_ajax_request()) {
 		    $this->layout->setLayout('layouts/empty');
 		} else {
@@ -112,7 +114,7 @@ class APP_Controller extends CI_Controller {
 			}
 			else
 			{
-			//	if($this->debug) $this->output->enable_profiler(TRUE);
+			
 				$this->set('now', '');
 			}
 		}

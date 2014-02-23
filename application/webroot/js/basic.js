@@ -158,6 +158,18 @@
 	        return false;
 	    }
 	}
+
+	var vimeoParser = function(url) {
+		var regExp = /http:\/\/(www\.)?vimeo.com\/(\d+)($|\/)/;
+
+		var match = url.match(regExp);
+
+		if (match){
+		    return match[2];
+		}else{
+			return false;
+		}
+	}
 	
 	var soundcloudParser = function(url) {
 		if(url.indexOf('soundcloud') == -1) return false;
