@@ -324,6 +324,14 @@ class Page extends APP_Controller {
                 $this->m_story->update_count($id, 'pageview_count');
                 // story log end
                 
+<<<<<<< HEAD
+=======
+
+            	if(!empty($story->cover)) {
+                    $black_base_navbar = true;
+            	}
+
+>>>>>>> 928444a817f73992b9a1533ac84ecf0649af65d5
             	$can_edit = $this->user_data->id == $story->user_id ? true : false;
             	if($can_edit) {
             		$this->set('edit_url', site_url('/edit/'.$story->id));
